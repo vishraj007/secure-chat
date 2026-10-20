@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Report - Secure Chat Application (ICS412)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --primary: #1e3a8a;
+      --text: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg-code: #f3f4f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fafafa;
+      padding: 40px 20px;
+    }
+
+    .report-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 60px 70px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+    }
+
+    /* Cover / Header */
+    .cover-page {
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 50px;
+      padding-bottom: 30px;
+    }
+
+    .cover-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.25;
+      margin-bottom: 24px;
+    }
+
+    .cover-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: #374151;
+      line-height: 1.8;
+    }
+
+    .cover-meta strong {
+      color: #111827;
+    }
+
+    .student-list {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    /* Section Headings */
+    h1, h2, h3, h4 {
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 40px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      margin-top: 36px;
+      margin-bottom: 16px;
+      color: #1f2937;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    p {
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 28px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    tr:nth-child(even) {
+      background: #fcfcfc;
+    }
+
+    /* Code Blocks */
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 18px 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin: 20px 0;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--bg-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #b91c1c;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Screenshot Figures */
+    .figure-block {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .figure-block img {
+      max-width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .figure-caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* Callout */
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+      font-size: 0.96rem;
+    }
+
+    /* Print settings */
+    @media print {
+      body { background: white; padding: 0; font-size: 14pt; }
+      .report-container { box-shadow: none; padding: 0; max-width: 100%; }
+      .page-break { page-break-before: always; }
+      pre { white-space: pre-wrap; font-size: 7.5pt; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-container">
+
+  <!-- Cover Section -->
+  <div class="cover-page">
+    <div class="cover-title">
+      Secure Chat Application using Diffie-Hellman + AES + HMAC
+    </div>
+    <div class="cover-meta">
+      <p><strong>Course Name:</strong> Cryptography and Network Security (ICS412)</p>
+      <p><strong>Student Name:</strong></p>
+      <ul class="student-list">
+        <li><strong>Vishal Rawat</strong> (Roll No: 2023BCS0101)</li>
+        <li><strong>Jatin Nath</strong> (Roll No: 2023BCD0014)</li>
+        <li><strong>Rishi</strong> (Roll No: 2023BCD0023)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Title of the Project -->
+  <h1>Title of the Project</h1>
+  <p style="font-size: 1.25rem; font-weight: 700; color: #1e3a8a; margin-bottom: 24px;">
+    Secure Chat Application using Diffie-Hellman Key Exchange, AES-256-CBC, and HMAC-SHA256 with Real-Time Attack Simulation
+  </p>
+
+  <!-- Abstract -->
+  <h2>Abstract</h2>
+  <p>
+    In contemporary computer networks, public communication channels are fundamentally untrusted and susceptible to interception, manipulation, and spoofing. This project presents the design, mathematical formalization, and interactive implementation of an end-to-end secure communication system modeling modern transport layer security (TLS 1.3 / Signal Protocol architectures). The system integrates four foundational pillars of modern applied cryptography:
+  </p>
+  <ul>
+    <li><strong>Asymmetric Key Exchange:</strong> Diffie-Hellman protocol based on RFC 3526 2048-bit MODP safe prime groups (p, g) to establish a shared master secret over an insecure channel without transmitting private parameters.</li>
+    <li><strong>Key Derivation Function (KDF):</strong> HMAC-based Extract-and-Expand Key Derivation Function (HKDF-SHA256, RFC 5869) to derive independent, cryptographically strong 256-bit symmetric encryption keys (K<sub>AES</sub>) and message authentication keys (K<sub>HMAC</sub>).</li>
+    <li><strong>Symmetric Payload Confidentiality:</strong> Advanced Encryption Standard (AES-256) operating in Cipher Block Chaining (CBC) mode with cryptographically secure random Initialization Vectors (IV, 128-bit) per message and PKCS#7 padding.</li>
+    <li><strong>Message Integrity, Authentication, and Anti-Replay Defense:</strong> Encrypt-then-MAC paradigm utilizing HMAC-SHA256 computed over the 64-bit monotonically increasing sequence number, IV, and ciphertext payload (Seq || IV || C).</li>
+  </ul>
+  <p>
+    To provide rigorous educational insight and empirical evaluation, the application embeds a real-time, tri-party visual environment containing Alice (sender), Bob (receiver), and Eve (network adversary). Through this platform, four critical adversarial scenarios are demonstrated: passive eavesdropping, ciphertext tampering (single-bit flipping), packet replay attacks, and unauthenticated Diffie-Hellman Man-in-the-Middle (MITM) interception. The implementation has been validated both as a standalone Python application leveraging the Python <code>cryptography</code> primitives and as a zero-dependency web interface utilizing the W3C Web Cryptography API.
+  </p>
+
+  <div class="page-break"></div>
+
+  <!-- Introduction -->
+  <h2>Introduction</h2>
+  <h3>1. Motivation and Problem Context</h3>
+  <p>
+    The rapid proliferation of networked applications, distributed databases, and real-time messaging services has elevated information security from an operational feature to a critical requirement. Open packet-switched networks inherently expose packets to inspection and unauthorized transformation by intermediate entities, including untrusted routers, ISP tapping, and active adversaries.
+  </p>
+  <p>
+    Achieving secure communication over an untrusted transmission medium necessitates fulfilling four fundamental security objectives defined by the CIA triad and extended cryptographic principles:
+  </p>
+  <ul>
+    <li><strong>Confidentiality:</strong> Preventing unauthorized disclosure of plaintext data to passive observers.</li>
+    <li><strong>Integrity:</strong> Ensuring that any modification, insertion, or deletion of transmitted data in transit is reliably detected by the recipient.</li>
+    <li><strong>Authenticity & Non-Repudiation:</strong> Confirming that the received payload originates genuinely from the claimed peer entity.</li>
+    <li><strong>Freshness & Anti-Replay Defense:</strong> Guaranteeing that previously intercepted valid packets cannot be maliciously retransmitted to induce state duplication or transaction replay.</li>
+  </ul>
+
+  <h3>2. The Cryptographic Dilemma</h3>
+  <p>
+    Symmetric ciphers such as AES-256 provide high-throughput, computationally lightweight encryption suitable for bulk data transfer. However, symmetric ciphers suffer from the fundamental <em>Key Distribution Problem</em>: two parties wishing to communicate must securely share a secret key beforehand. Transmitting the key across the open channel nullifies confidentiality.
+  </p>
+  <p>
+    Conversely, asymmetric (public-key) algorithms solve the key distribution dilemma through mathematically related key pairs but incur substantial computational overhead, rendering them impractical for streaming message encryption.
+  </p>
+
+  <h3>3. Proposed Solution</h3>
+  <p>
+    This project synthesizes asymmetric and symmetric paradigms into a <strong>hybrid cryptographic architecture</strong>:
+  </p>
+  <ol>
+    <li><strong>Diffie-Hellman (DH)</strong> asymmetric key agreement establishes an ephemeral shared secret without disclosing the participants' private exponents.</li>
+    <li><strong>HKDF-SHA256</strong> stretches and separates the shared entropy into dedicated operational keys, eliminating cryptographic key-reuse vulnerabilities.</li>
+    <li><strong>AES-256-CBC</strong> secures arbitrary-length plaintexts using fresh initialization vectors.</li>
+    <li><strong>HMAC-SHA256 (Encrypt-then-MAC)</strong> binds message integrity and sequence counter tracking to the derived MAC key, thwarting chosen-ciphertext attacks, padding oracle vulnerabilities, and replay attacks.</li>
+    <li><strong>Interactive Attack Workbench:</strong> Eve's adversarial tap provides visibility into raw network packets, verifying that an adversary observes only pseudo-random bitstrings while interactively demonstrating failure modes when packets are corrupted or replayed.</li>
+  </ol>
+
+  <!-- Methodology -->
+  <h2>Methodology</h2>
+  <h3>1. System Architecture & Threat Model</h3>
+  <p>
+    The system architecture models two communicating endpoints (Alice and Bob) communicating over a shared, untrusted network wire observed and manipulated by an adversary (Eve). Under the standard Dolev-Yao threat model:
+  </p>
+  <ul>
+    <li><strong>Passive Eavesdropping:</strong> Eve reads all raw bits transmitted across the wire (Seq, IV, C, Tag).</li>
+    <li><strong>Active Message Modification:</strong> Eve can alter arbitrary bits of transmitted packets in transit.</li>
+    <li><strong>Message Replay:</strong> Eve captures legitimate packets transmitted earlier and re-injects them into the channel.</li>
+    <li><strong>Man-in-the-Middle (MITM):</strong> Without cryptographic public-key authentication, Eve can intercept the public Diffie-Hellman values A and B, replace them with her own parameters, and establish distinct shared keys with Alice and Bob.</li>
+  </ul>
+
+  <h3>2. Cryptographic Protocols & Mathematical Formulations</h3>
+
+  <h4>Phase I: Diffie-Hellman Key Exchange (RFC 3526 Group 14)</h4>
+  <p>
+    The key exchange operates over the multiplicative group of integers modulo a large safe prime <em>p</em> (2048-bit MODP safe prime), with generator <em>g = 2</em>:
+  </p>
+  <ul>
+    <li>Alice chooses private exponent <code>a</code> and computes public key <code>A = g^a mod p</code>.</li>
+    <li>Bob chooses private exponent <code>b</code> and computes public key <code>B = g^b mod p</code>.</li>
+    <li>Public values <code>A</code> and <code>B</code> are exchanged across the network.</li>
+    <li>Alice computes: <code>K_shared = B^a mod p = (g^b)^a mod p = g^(ab) mod p</code>.</li>
+    <li>Bob computes: <code>K_shared = A^b mod p = (g^a)^b mod p = g^(ab) mod p</code>.</li>
+  </ul>
+  <p>
+    Due to the Discrete Logarithm Problem (DLP), an eavesdropper observing (p, g, A, B) cannot compute <code>g^(ab) mod p</code> in polynomial time.
+  </p>
+
+  <h4>Phase II: Key Derivation Function (HKDF-SHA256)</h4>
+  <p>
+    Using the shared DH secret directly as an encryption key is cryptographically unsafe because DH outputs are not uniformly distributed. HKDF (RFC 5869) extracts and expands the shared secret into 64 bytes of pseudorandom material:
+  </p>
+  <ul>
+    <li><code>K_AES = OKM[0..31]</code> (256-bit AES encryption key)</li>
+    <li><code>K_HMAC = OKM[32..63]</code> (256-bit HMAC authentication key)</li>
+  </ul>
+
+  <h4>Phase III: AES-256-CBC Payload Encryption</h4>
+  <p>
+    Plaintext messages are padded according to PKCS#7 (block size 16 bytes). For each transmission, a fresh cryptographically secure 128-bit random IV is generated. The ciphertext blocks are computed as:
+  </p>
+  <p style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
+    C_0 = IV, &nbsp;&nbsp; C_i = E_{K_AES}(P_i &oplus; C_{i-1})
+  </p>
+
+  <h4>Phase IV: Encrypt-then-MAC Authentication & Packet Serialization</h4>
+  <p>
+    To protect against chosen-ciphertext and padding oracle attacks, the Encrypt-then-MAC (EtM) paradigm is applied. A 64-bit monotonically increasing sequence number (Seq) prevents replay attacks:
+  </p>
+  <p style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
+    Tag = HMAC-SHA256_{K_HMAC}(Seq || IV || Ciphertext)
+  </p>
+  <p style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
+    Wire Packet = Seq (8 bytes) || IV (16 bytes) || Ciphertext (N bytes) || Tag (32 bytes)
+  </p>
+
+  <h4>Phase V: Receiver Decryption & Anti-Replay Verification Pipeline</h4>
+  <ol>
+    <li><strong>Verify HMAC Tag First:</strong> Recompute HMAC over <code>Seq || IV || Ciphertext</code>. If verification fails, drop packet immediately. <em>Decryption is never attempted on untampered data.</em></li>
+    <li><strong>Verify Sequence Number:</strong> Ensure <code>Seq &gt; Recv_Seq</code>. If <code>Seq &le; Recv_Seq</code>, abort with Replay Detected.</li>
+    <li><strong>Decrypt & Unpad:</strong> Decrypt with AES-256-CBC using <code>K_AES</code> and <code>IV</code>, remove PKCS#7 padding, and deliver message.</li>
+  </ol>
+
+  <!-- Screenshots -->
+  <div class="page-break"></div>
+  <h2>Screenshots</h2>
+
+  <div class="figure-block">
+    <img src="screenshots/fig1_initial_state.png" alt="Figure 1: Initial Application State">
+    <div class="figure-caption">Figure 1: System Initial State (Unsecured channel, Alice, Eve, Bob panels with controls).</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig2_key_exchange.png" alt="Figure 2: Key Exchange Details">
+    <div class="figure-caption">Figure 2: Animated Diffie-Hellman Key Exchange and HKDF-SHA256 key derivation log.</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig3_alice_bob_chat.png" alt="Figure 3: Secure Chat & Eavesdropper View">
+    <div class="figure-caption">Figure 3: Secure End-to-End Chat. Plaintext visible only to Alice and Bob; Eve observes only raw ciphertext, IV, and HMAC.</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig4_tamper_attack_rejected.png" alt="Figure 4: Tamper Attack Rejected">
+    <div class="figure-caption">Figure 4: Active Tampering Attack. Eve flips a single bit in the ciphertext; Bob immediately rejects with "HMAC verification FAILED".</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig5_replay_attack_rejected.png" alt="Figure 5: Replay Attack Rejected">
+    <div class="figure-caption">Figure 5: Replay Attack. Eve re-transmits a previously captured packet; Bob rejects with "REPLAY detected - sequence 1 already seen".</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig6_mitm_exchange.png" alt="Figure 6: MITM Key Exchange">
+    <div class="figure-caption">Figure 6: Man-in-the-Middle Key Exchange. Eve intercepts public keys, establishing separate shared secrets with Alice and Bob. Status indicates "COMPROMISED (MITM)".</div>
+  </div>
+
+  <div class="figure-block">
+    <img src="screenshots/fig7_mitm_intercepted_message.png" alt="Figure 7: MITM Intercepted & Modified Message">
+    <div class="figure-caption">Figure 7: MITM Attack Execution. Eve decrypts Alice's message, modifies the text to "[edited by Eve]", and re-encrypts for Bob. Demonstrates the necessity of PKI/Digital Signatures.</div>
+  </div>
+
+  <!-- Code -->
+  <div class="page-break"></div>
+  <h2>Code</h2>
+  <p>Below is the complete, self-contained Python source code (<code>secure_chat_lab.py</code>) implementing the cryptographic protocol and interactive Tkinter GUI:</p>
+
+  <pre><code>"""
+Secure Chat Lab  -  Cryptography and Network Security (ICS412) project
+-----------------------------------------------------------------------
+Interactive GUI that simulates Alice, Bob and an attacker (Eve) on one screen.
+
+  * Diffie-Hellman key exchange (RFC 3526, 2048-bit group)
+  * HKDF-SHA256 key derivation  (separate AES key and HMAC key)
+  * AES-256-CBC encryption      (PKCS7 padding, random IV per message)
+  * HMAC-SHA256 integrity       (encrypt-then-MAC, includes sequence number)
+  * Attacks you can switch on:  eavesdropping, tampering, replay,
+                                man-in-the-middle (unauthenticated DH)
+
+Requirements:  pip install cryptography      (tkinter ships with Python)
+Run:           python secure_chat_lab.py
+"""
+import os
+import struct
+import time
+import tkinter as tk
+from tkinter import ttk
+
+from cryptography.hazmat.primitives import hashes, hmac, padding
+from cryptography.hazmat.primitives.asymmetric import dh
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.exceptions import InvalidSignature
+
+# ----------------------------------------------------------------------------
+# 1. CRYPTO CORE
+# ----------------------------------------------------------------------------
+# RFC 3526 group 14 (2048-bit MODP safe prime), generator g = 2
+P_HEX = (
+    "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74"
+    "020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F1437"
+    "4FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7ED"
+    "EE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF05"
+    "98DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB"
+    "9ED529077096966D670C354E4ABC9804F1746C08CA18217C32905E462E36CE3B"
+    "E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9DE2BCBF695581718"
+    "3995497CEA956AE515D2261898FA051015728E5A8AACAA68FFFFFFFFFFFFFFFF"
+)
+P = int(P_HEX, 16)
+G = 2
+PARAMS = dh.DHParameterNumbers(P, G).parameters()
+
+
+class Keys:
+    """AES key + HMAC key derived from one shared secret."""
+    def __init__(self, shared_secret: bytes):
+        okm = HKDF(hashes.SHA256(), 64, salt=None,
+                   info=b"secure-chat-lab").derive(shared_secret)
+        self.aes_key, self.mac_key = okm[:32], okm[32:]
+        self.send_seq = 0          # next sequence number to send
+        self.recv_seq = 0          # highest sequence number accepted
+
+
+def encrypt_message(keys: Keys, text: str) -> bytes:
+    """packet = seq(8) | iv(16) | ciphertext | hmac(32)"""
+    keys.send_seq += 1
+    seq = struct.pack(">Q", keys.send_seq)
+    iv = os.urandom(16)
+    padder = padding.PKCS7(128).padder()
+    padded = padder.update(text.encode()) + padder.finalize()
+    enc = Cipher(algorithms.AES(keys.aes_key), modes.CBC(iv)).encryptor()
+    ct = enc.update(padded) + enc.finalize()
+    h = hmac.HMAC(keys.mac_key, hashes.SHA256())
+    h.update(seq + iv + ct)
+    return seq + iv + ct + h.finalize()
+
+
+def decrypt_message(keys: Keys, packet: bytes, check_replay=True) -> str:
+    """Verify HMAC first, then replay check, then decrypt.
+    Raises ValueError with a readable reason on failure."""
+    if len(packet) < 8 + 16 + 16 + 32:
+        raise ValueError("packet too short")
+    seq, iv, ct, tag = packet[:8], packet[8:24], packet[24:-32], packet[-32:]
+    h = hmac.HMAC(keys.mac_key, hashes.SHA256())
+    h.update(seq + iv + ct)
+    try:
+        h.verify(tag)
+    except InvalidSignature:
+        raise ValueError("HMAC verification FAILED - message was modified")
+    n = struct.unpack(">Q", seq)[0]
+    if check_replay and n <= keys.recv_seq:
+        raise ValueError(f"REPLAY detected - sequence {n} already seen")
+    dec = Cipher(algorithms.AES(keys.aes_key), modes.CBC(iv)).decryptor()
+    padded = dec.update(ct) + dec.finalize()
+    unpadder = padding.PKCS7(128).unpadder()
+    text = unpadder.update(padded) + unpadder.finalize()
+    if check_replay:
+        keys.recv_seq = n
+    return text.decode()
+
+
+class Party:
+    """One side of the conversation (Alice, Bob or Eve's fake identities)."""
+    def __init__(self, name):
+        self.name = name
+        self.priv = PARAMS.generate_private_key()
+        self.x = self.priv.private_numbers().x
+        self.y = self.priv.public_key().public_numbers().y     # public value
+        self.keys = None
+
+    def compute_shared(self, peer_y: int) -> bytes:
+        peer = dh.DHPublicNumbers(peer_y, PARAMS.parameter_numbers()).public_key()
+        secret = self.priv.exchange(peer)
+        self.keys = Keys(secret)
+        return secret
+
+
+def short(n, width=24):
+    s = format(n, "x") if isinstance(n, int) else n.hex()
+    return s if len(s) <= 2 * width else s[:width] + " ... " + s[-width:]
+
+
+# ----------------------------------------------------------------------------
+# 2. GUI INTERFACE
+# ----------------------------------------------------------------------------
+BG, PANEL, FG = "#10151f", "#182030", "#e6edf7"
+ALICE_C, BOB_C, EVE_C = "#4da3ff", "#4cd18a", "#ff6b6b"
+MONO = ("Consolas", 10)
+
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Secure Chat Lab - Diffie-Hellman + AES + HMAC")
+        self.geometry("1280x800")
+        self.configure(bg=BG)
+        self.minsize(1100, 700)
+
+        self.alice = self.bob = None
+        self.eve_a = self.eve_b = None       # Eve's identities in MITM mode
+        self.mitm_active = False
+        self.ready = False
+        self.last_packet = None              # (sender, packet) for replay
+
+        self.var_tamper = tk.BooleanVar(value=False)
+        self.var_mitm = tk.BooleanVar(value=False)
+        self.var_show_key = tk.BooleanVar(value=True)
+
+        self._build_ui()
+        self.log_key("Welcome! Click 'Run Key Exchange' to start.\n"
+                     "Tip: tick 'Man-in-the-middle' BEFORE running the exchange "
+                     "to see why plain Diffie-Hellman is not enough.")
+
+    def _build_ui(self):
+        top = tk.Frame(self, bg=BG)
+        top.pack(fill="x", padx=12, pady=(10, 4))
+        tk.Label(top, text="Secure Chat Lab", bg=BG, fg=FG,
+                 font=("Segoe UI", 18, "bold")).pack(side="left")
+        tk.Label(top, text="   DH key exchange  >  HKDF  >  AES-256-CBC + HMAC-SHA256",
+                 bg=BG, fg="#8fa3bf", font=("Segoe UI", 10)).pack(side="left")
+
+        ctl = tk.Frame(self, bg=PANEL)
+        ctl.pack(fill="x", padx=12, pady=6)
+        self.btn_kx = self._btn(ctl, "1. Run Key Exchange", self.start_key_exchange, "#2f6fed")
+        self.btn_kx.pack(side="left", padx=8, pady=8)
+        self._btn(ctl, "Reset", self.reset, "#555d70").pack(side="left", padx=4)
+        self._chk(ctl, "Attacker tampers with next message", self.var_tamper).pack(side="left", padx=14)
+        self._chk(ctl, "Man-in-the-middle (set before key exchange)", self.var_mitm).pack(side="left", padx=6)
+        self.btn_replay = self._btn(ctl, "Replay last packet", self.replay, "#b9770e")
+        self.btn_replay.pack(side="right", padx=8)
+
+        main = tk.Frame(self, bg=BG)
+        main.pack(fill="both", expand=True, padx=12, pady=4)
+        for c in range(3):
+            main.columnconfigure(c, weight=1, uniform="col")
+        main.rowconfigure(0, weight=1)
+
+        self.alice_chat, self.alice_entry = self._chat_panel(main, 0, "ALICE", ALICE_C, self.send_alice)
+        self.eve_log = self._log_panel(main, 1, "EVE  (attacker on the network)", EVE_C)
+        self.bob_chat, self.bob_entry = self._chat_panel(main, 2, "BOB", BOB_C, self.send_bob)
+
+        bottom = tk.Frame(self, bg=PANEL)
+        bottom.pack(fill="both", padx=12, pady=(4, 10))
+        head = tk.Frame(bottom, bg=PANEL)
+        head.pack(fill="x")
+        tk.Label(head, text="KEY EXCHANGE DETAILS (what happens under the hood)",
+                 bg=PANEL, fg="#ffd166", font=("Segoe UI", 10, "bold")).pack(side="left", padx=8, pady=4)
+        self.status = tk.Label(head, text="NOT SECURED", bg="#7a1f1f", fg="white",
+                               font=("Segoe UI", 9, "bold"), padx=10)
+        self.status.pack(side="right", padx=8, pady=4)
+        self.key_log = tk.Text(bottom, height=11, bg="#0b0f17", fg="#cfe3ff",
+                               font=MONO, wrap="word", relief="flat")
+        self.key_log.pack(fill="both", padx=8, pady=(0, 8))
+        self.key_log.tag_config("step", foreground="#ffd166", font=("Consolas", 10, "bold"))
+        self.key_log.tag_config("ok", foreground="#4cd18a")
+        self.key_log.tag_config("bad", foreground="#ff6b6b")
+        self._set_inputs(False)
+
+    def _btn(self, parent, text, cmd, color):
+        return tk.Button(parent, text=text, command=cmd, bg=color, fg="white",
+                         activebackground=color, relief="flat", padx=12, pady=5,
+                         font=("Segoe UI", 10, "bold"), cursor="hand2")
+
+    def _chk(self, parent, text, var):
+        return tk.Checkbutton(parent, text=text, variable=var, bg=PANEL, fg=FG,
+                              selectcolor="#0b0f17", activebackground=PANEL,
+                              activeforeground=FG, font=("Segoe UI", 10))
+
+    def _chat_panel(self, parent, col, title, color, send_cmd):
+        f = tk.Frame(parent, bg=PANEL)
+        f.grid(row=0, column=col, sticky="nsew", padx=5, pady=4)
+        tk.Label(f, text=title, bg=color, fg="#06101c",
+                 font=("Segoe UI", 11, "bold")).pack(fill="x")
+        txt = tk.Text(f, bg="#0b0f17", fg=FG, font=("Segoe UI", 10), wrap="word",
+                      relief="flat", state="disabled", padx=8, pady=8)
+        txt.pack(fill="both", expand=True, padx=6, pady=6)
+        txt.tag_config("me", foreground=color)
+        txt.tag_config("them", foreground="#e6edf7")
+        txt.tag_config("sys", foreground="#8fa3bf", font=("Segoe UI", 9, "italic"))
+        txt.tag_config("bad", foreground="#ff6b6b", font=("Segoe UI", 10, "bold"))
+        row = tk.Frame(f, bg=PANEL)
+        row.pack(fill="x", padx=6, pady=(0, 8))
+        ent = tk.Entry(row, bg="#0b0f17", fg=FG, insertbackground=FG, relief="flat",
+                       font=("Segoe UI", 11))
+        ent.pack(side="left", fill="x", expand=True, ipady=5)
+        ent.bind("<Return>", lambda e: send_cmd())
+        tk.Button(row, text="Send", command=send_cmd, bg=color, fg="#06101c",
+                  relief="flat", font=("Segoe UI", 10, "bold"), padx=12).pack(side="left", padx=(6, 0))
+        return txt, ent
+
+    def _log_panel(self, parent, col, title, color):
+        f = tk.Frame(parent, bg=PANEL)
+        f.grid(row=0, column=col, sticky="nsew", padx=5, pady=4)
+        tk.Label(f, text=title, bg=color, fg="#06101c",
+                 font=("Segoe UI", 11, "bold")).pack(fill="x")
+        txt = tk.Text(f, bg="#0b0f17", fg="#ffb3b3", font=("Consolas", 9), wrap="char",
+                      relief="flat", state="disabled", padx=8, pady=8)
+        txt.pack(fill="both", expand=True, padx=6, pady=6)
+        txt.tag_config("head", foreground="#ff6b6b", font=("Consolas", 9, "bold"))
+        txt.tag_config("plain", foreground="#ffd166", font=("Consolas", 10, "bold"))
+        txt.tag_config("sys", foreground="#8fa3bf")
+        txt.tag_config("ok", foreground="#4cd18a")
+        return txt
+
+    def _append(self, widget, text, tag=None):
+        widget.configure(state="normal")
+        widget.insert("end", text, tag)
+        widget.see("end")
+        widget.configure(state="disabled")
+
+    def log_key(self, text, tag=None):
+        self.key_log.insert("end", text + "\n", tag)
+        self.key_log.see("end")
+
+    def _set_inputs(self, on):
+        st = "normal" if on else "disabled"
+        self.alice_entry.configure(state=st)
+        self.bob_entry.configure(state=st)
+        self.btn_replay.configure(state=st)
+
+    def set_status(self, text, color):
+        self.status.configure(text=text, bg=color)
+
+    def start_key_exchange(self):
+        self.reset(silent=True)
+        self.btn_kx.configure(state="disabled")
+        self.mitm_active = self.var_mitm.get()
+        self.key_log.delete("1.0", "end")
+        steps = [self._kx1, self._kx2, self._kx3, self._kx4, self._kx5]
+        for i, s in enumerate(steps):
+            self.after(700 * i, s)
+
+    def _kx1(self):
+        self.log_key("STEP 1  Public parameters (known to everyone, including Eve)", "step")
+        self.log_key(f"   p = {short(P)}   (2048-bit safe prime, RFC 3526)")
+        self.log_key("   g = 2")
+        self.alice, self.bob = Party("Alice"), Party("Bob")
+        if self.mitm_active:
+            self.eve_a, self.eve_b = Party("Eve-as-Bob"), Party("Eve-as-Alice")
+
+    def _kx2(self):
+        self.log_key("\nSTEP 2  Each side picks a SECRET number and computes a PUBLIC value (g^x mod p)", "step")
+        self.log_key(f"   Alice secret a = {short(self.alice.x)}   (never sent)")
+        self.log_key(f"   Alice public A = {short(self.alice.y)}")
+        self.log_key(f"   Bob   secret b = {short(self.bob.x)}   (never sent)")
+        self.log_key(f"   Bob   public B = {short(self.bob.y)}")
+
+    def _kx3(self):
+        self.log_key("\nSTEP 3  Public values are sent over the open network", "step")
+        if self.mitm_active:
+            self.log_key("   !! Eve intercepts both values and substitutes her own !!", "bad")
+            self.log_key(f"   Alice receives (thinks it is Bob's):   {short(self.eve_a.y)}", "bad")
+            self.log_key(f"   Bob   receives (thinks it is Alice's): {short(self.eve_b.y)}", "bad")
+        else:
+            self.log_key("   Alice -> Bob : A        Bob -> Alice : B")
+            self.log_key("   Eve sees A and B, but cannot get a or b (discrete logarithm problem).")
+        self._append(self.eve_log, "[key exchange] public values observed:\n", "head")
+        self._append(self.eve_log, f"  A = {short(self.alice.y, 16)}\n  B = {short(self.bob.y, 16)}\n\n", "sys")
+
+    def _kx4(self):
+        self.log_key("\nSTEP 4  Each side computes the shared secret and derives keys with HKDF-SHA256", "step")
+        if self.mitm_active:
+            s_a = self.alice.compute_shared(self.eve_a.y)
+            s_b = self.bob.compute_shared(self.eve_b.y)
+            self.eve_a.compute_shared(self.alice.y)
+            self.eve_b.compute_shared(self.bob.y)
+            self.log_key(f"   Alice secret = {short(s_a)}")
+            self.log_key(f"   Bob   secret = {short(s_b)}")
+            self.log_key("   -> Alice and Bob have DIFFERENT secrets; each one shares a key with Eve.", "bad")
+        else:
+            s_a = self.alice.compute_shared(self.bob.y)
+            s_b = self.bob.compute_shared(self.alice.y)
+            self.log_key(f"   Alice computes B^a mod p = {short(s_a)}")
+            self.log_key(f"   Bob   computes A^b mod p = {short(s_b)}")
+            self.log_key("   -> Identical shared secret on both sides." if s_a == s_b else "   MISMATCH", "ok")
+        self.log_key(f"   AES-256 key  (Alice) = {self.alice.keys.aes_key.hex()[:32]}...")
+        self.log_key(f"   HMAC key     (Alice) = {self.alice.keys.mac_key.hex()[:32]}...")
+
+    def _kx5(self):
+        self.ready = True
+        self._set_inputs(True)
+        self.btn_kx.configure(state="normal")
+        if self.mitm_active:
+            self.set_status("COMPROMISED (MITM)", "#b9770e")
+            self.log_key("\nDONE  Channel looks secure to Alice and Bob, but Eve reads everything.\n"
+                         "      Fix: authenticate the public values (RSA signatures / certificates, as in TLS).", "bad")
+        else:
+            self.set_status("SECURE CHANNEL", "#1f7a4a")
+            self.log_key("\nDONE  Secure channel established. Try sending messages!", "ok")
+        for w in (self.alice_chat, self.bob_chat):
+            self._append(w, "-- channel ready --\n", "sys")
+
+    def send_alice(self):
+        self._send(self.alice, self.bob, self.alice_entry, self.alice_chat,
+                   self.bob_chat, self.eve_a, "Alice")
+
+    def send_bob(self):
+        self._send(self.bob, self.alice, self.bob_entry, self.bob_chat,
+                   self.alice_chat, self.eve_b, "Bob")
+
+    def _send(self, sender, receiver, entry, my_chat, their_chat, eve_ident, name):
+        if not self.ready:
+            return
+        text = entry.get().strip()
+        if not text:
+            return
+        entry.delete(0, "end")
+        self._append(my_chat, f"You: {text}\n", "me")
+
+        packet = encrypt_message(sender.keys, text)
+        self._append(self.eve_log, f"[{time.strftime('%H:%M:%S')}] {name} -> "
+                     f"{'Bob' if name == 'Alice' else 'Alice'}\n", "head")
+        self._show_packet(packet)
+
+        if self.mitm_active:
+            plain = decrypt_message(eve_ident.keys, packet, check_replay=False)
+            self._append(self.eve_log, f"  >>> DECRYPTED BY EVE: \"{plain}\"\n\n", "plain")
+            other = self.eve_b if eve_ident is self.eve_a else self.eve_a
+            if self.var_tamper.get():
+                plain += " [edited by Eve]"
+                self.var_tamper.set(False)
+                self._append(self.eve_log, "  Eve edits the message before forwarding!\n\n", "head")
+            packet = encrypt_message(other.keys, plain)
+        else:
+            self._append(self.eve_log, "  Eve cannot read this (no key).\n\n", "sys")
+            if self.var_tamper.get():
+                packet = self._tamper(packet)
+                self.var_tamper.set(False)
+
+        self._deliver(receiver, their_chat, packet)
+
+    def _show_packet(self, packet):
+        iv, ct, tag = packet[8:24], packet[24:-32], packet[-32:]
+        n = struct.unpack(">Q", packet[:8])[0]
+        self._append(self.eve_log, f"  seq : {n}\n  IV  : {iv.hex()}\n"
+                     f"  data: {ct.hex()}\n  HMAC: {tag.hex()[:32]}...\n")
+
+    def _tamper(self, packet):
+        b = bytearray(packet)
+        b[26] ^= 0x01
+        self._append(self.eve_log, "  Eve FLIPS ONE BIT of the ciphertext in transit!\n\n", "head")
+        return bytes(b)
+
+    def _deliver(self, receiver, chat, packet):
+        try:
+            text = decrypt_message(receiver.keys, packet)
+            self._append(chat, f"Them: {text}\n", "them")
+            self.last_packet = (receiver, chat, packet)
+            self._append(chat, "   (HMAC verified)\n", "sys")
+        except ValueError as e:
+            self._append(chat, f"REJECTED: {e}\n", "bad")
+            self._append(self.eve_log, f"  Receiver rejected packet: {e}\n\n", "sys")
+
+    def replay(self):
+        if not self.last_packet:
+            return
+        receiver, chat, packet = self.last_packet
+        self._append(self.eve_log, "[REPLAY ATTACK] Eve re-sends a captured packet\n", "head")
+        self._deliver(receiver, chat, packet)
+
+    def reset(self, silent=False):
+        self.ready = False
+        self.alice = self.bob = self.eve_a = self.eve_b = None
+        self.last_packet = None
+        self.var_tamper.set(False)
+        for w in (self.alice_chat, self.bob_chat, self.eve_log):
+            w.configure(state="normal"); w.delete("1.0", "end"); w.configure(state="disabled")
+        self._set_inputs(False)
+        self.set_status("NOT SECURED", "#7a1f1f")
+        self.btn_kx.configure(state="normal")
+        if not silent:
+            self.key_log.delete("1.0", "end")
+            self.log_key("Reset. Click 'Run Key Exchange' to start again.")
+
+
+if __name__ == "__main__":
+    App().mainloop()
+</code></pre>
+
+  <!-- References -->
+  <h2>References</h2>
+  <ol>
+    <li><strong>Diffie, W., & Hellman, M. (1976).</strong> New directions in cryptography. <em>IEEE Transactions on Information Theory</em>, 22(6), 644-654.</li>
+    <li><strong>Kivinen, T., & Kojo, M. (2003).</strong> <em>More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)</em>. RFC 3526, Internet Engineering Task Force (IETF).</li>
+    <li><strong>Krawczyk, H., & Eronen, P. (2010).</strong> <em>HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</em>. RFC 5869, Internet Engineering Task Force (IETF).</li>
+    <li><strong>Krawczyk, H. (2001).</strong> The order of encryption and authentication for protecting communications (or: How secure is SSL?). In <em>Advances in Cryptology — CRYPTO 2001</em> (pp. 310-331). Springer, Berlin, Heidelberg.</li>
+    <li><strong>Bellare, M., & Namprempre, C. (2000).</strong> Authenticated encryption: Relations among notions and analysis of the generic composition paradigm. In <em>Advances in Cryptology — ASIACRYPT 2000</em> (pp. 531-545). Springer, Berlin, Heidelberg.</li>
+    <li><strong>National Institute of Standards and Technology (NIST). (2001).</strong> <em>Advanced Encryption Standard (AES)</em>. Federal Information Processing Standards Publication (FIPS PUB 197).</li>
+    <li><strong>National Institute of Standards and Technology (NIST). (2001).</strong> <em>Recommendation for Block Cipher Modes of Operation: Methods and Techniques</em>. NIST Special Publication 800-38A.</li>
+    <li><strong>Krawczyk, H., Bellare, M., & Canetti, R. (1997).</strong> <em>HMAC: Keyed-Hashing for Message Authentication</em>. RFC 2104, Internet Engineering Task Force (IETF).</li>
+    <li><strong>Stallings, W. (2017).</strong> <em>Cryptography and Network Security: Principles and Practice</em> (7th ed.). Pearson Education.</li>
+    <li><strong>Rescorla, E. (2018).</strong> <em>The Transport Layer Security (TLS) Protocol Version 1.3</em>. RFC 8446, Internet Engineering Task Force (IETF).</li>
+  </ol>
+
+</div>
+
+</body>
+</html>

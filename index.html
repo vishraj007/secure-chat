@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure Chat Lab - Interactive demonstration of Diffie-Hellman key exchange, AES-256-CBC encryption, and HMAC-SHA256 message authentication for Cryptography and Network Security.">
+  <title>Secure Chat Lab — DH + AES + HMAC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Header -->
+  <header id="app-header">
+    <div class="header-left">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Secure Chat Lab</h1>
+        <p class="subtitle">Diffie-Hellman Key Exchange &nbsp;›&nbsp; HKDF-SHA256 &nbsp;›&nbsp; AES-256-CBC + HMAC-SHA256</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="status-badge" class="status-badge status-insecure">
+        <span class="status-dot"></span>
+        <span id="status-text">NOT SECURED</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Control Bar -->
+  <section id="control-bar">
+    <div class="controls-left">
+      <button id="btn-key-exchange" class="btn btn-primary" onclick="startKeyExchange()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+        </svg>
+        Run Key Exchange
+      </button>
+      <button id="btn-reset" class="btn btn-ghost" onclick="resetAll()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+        </svg>
+        Reset
+      </button>
+    </div>
+    <div class="controls-center">
+      <label class="toggle-label" id="toggle-tamper-label">
+        <input type="checkbox" id="chk-tamper">
+        <span class="toggle-switch"></span>
+        <span class="toggle-text">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          Tamper next msg
+        </span>
+      </label>
+      <label class="toggle-label" id="toggle-mitm-label">
+        <input type="checkbox" id="chk-mitm">
+        <span class="toggle-switch"></span>
+        <span class="toggle-text">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Man-in-the-Middle
+        </span>
+      </label>
+    </div>
+    <div class="controls-right">
+      <button id="btn-replay" class="btn btn-warning" onclick="replayAttack()" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Replay Attack
+      </button>
+    </div>
+  </section>
+
+  <!-- Chat Panels -->
+  <main id="chat-area">
+    <!-- Alice Panel -->
+    <section class="chat-panel alice-panel" id="alice-panel">
+      <div class="panel-header alice-header">
+        <div class="panel-avatar alice-avatar">A</div>
+        <div>
+          <h2>ALICE</h2>
+          <span class="panel-role">Sender</span>
+        </div>
+        <div class="panel-indicator" id="alice-indicator"></div>
+      </div>
+      <div class="chat-messages" id="alice-messages"></div>
+      <div class="chat-input-area">
+        <input type="text" id="alice-input" class="chat-input" placeholder="Type a message..." disabled autocomplete="off">
+        <button id="alice-send" class="btn-send alice-send" onclick="sendAlice()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Eve Panel -->
+    <section class="chat-panel eve-panel" id="eve-panel">
+      <div class="panel-header eve-header">
+        <div class="panel-avatar eve-avatar">E</div>
+        <div>
+          <h2>EVE</h2>
+          <span class="panel-role">Attacker / Eavesdropper</span>
+        </div>
+        <div class="eve-badge">PASSIVE</div>
+      </div>
+      <div class="chat-messages eve-messages" id="eve-messages"></div>
+    </section>
+
+    <!-- Bob Panel -->
+    <section class="chat-panel bob-panel" id="bob-panel">
+      <div class="panel-header bob-header">
+        <div class="panel-avatar bob-avatar">B</div>
+        <div>
+          <h2>BOB</h2>
+          <span class="panel-role">Receiver</span>
+        </div>
+        <div class="panel-indicator" id="bob-indicator"></div>
+      </div>
+      <div class="chat-messages" id="bob-messages"></div>
+      <div class="chat-input-area">
+        <input type="text" id="bob-input" class="chat-input" placeholder="Type a message..." disabled autocomplete="off">
+        <button id="bob-send" class="btn-send bob-send" onclick="sendBob()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Key Exchange Details -->
+  <section id="key-details">
+    <div class="key-header">
+      <div class="key-header-left">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <h3>Key Exchange Details</h3>
+        <span class="key-subtitle">What happens under the hood</span>
+      </div>
+      <button class="btn-collapse" id="btn-collapse" onclick="toggleKeyPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </div>
+    <div class="key-body" id="key-body">
+      <div class="key-log" id="key-log">
+        <div class="key-welcome">
+          <div class="key-welcome-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+            </svg>
+          </div>
+          <p>Click <strong>"Run Key Exchange"</strong> to start the Diffie-Hellman protocol.</p>
+          <p class="key-welcome-tip">💡 Tip: Enable <em>"Man-in-the-Middle"</em> before running the exchange to see why unauthenticated DH is vulnerable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="crypto-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
